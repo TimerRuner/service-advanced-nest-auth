@@ -43,8 +43,10 @@ export class TokenService {
       if(tokenData){
         tokenData.refreshToken = refreshToken
         tokenData.save()
+        return tokenData
+      } else {
+        return await this.tokenProvider.create({userId, refreshToken})
       }
-      return await this.tokenProvider.create({userId, refreshToken})
     } catch (e) {
       throw new BadRequestException(e.message)
     }
@@ -55,6 +57,6 @@ export class TokenService {
   }
 
   async findToken(refreshToken) {
-    await this.tokenProvider.findOne({where: {refreshToken}})
+    return await this.tokenProvider.findOne({where: {refreshToken}})
   }
 }

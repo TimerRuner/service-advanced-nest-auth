@@ -6,10 +6,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get("all")
   async getAllUsers() {
-    try {
-      return await this.userService.getAllUsers()
-    } catch (e) {
-      throw new BadRequestException(`${e.message}`)
-    }
+    return await this.userService.getAllUsers()
   }
 }

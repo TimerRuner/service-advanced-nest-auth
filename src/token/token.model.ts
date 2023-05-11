@@ -7,7 +7,7 @@ interface ITokenDto {
 }
 
 @Table({tableName: "tokens"})
-export class Token extends Model<Token, ITokenDto> {
+export class Token extends Model<Token> {
     @Column({primaryKey: true, autoIncrement: true, unique: true})
     id: number
 

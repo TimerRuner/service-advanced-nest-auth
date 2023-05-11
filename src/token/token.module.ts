@@ -3,7 +3,6 @@ import { TokenService } from './token.service';
 import { SequelizeModule } from "@nestjs/sequelize";
 import { User } from "../user/user.model";
 import { Token } from "./token.model";
-import { TokenController } from './token.controller';
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
@@ -21,7 +20,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     })
   ],
   providers: [TokenService],
-  controllers: [TokenController],
+  controllers: [],
   exports: [TokenService]
 })
 export class TokenModule {}

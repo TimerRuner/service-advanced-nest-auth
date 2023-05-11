@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { MailerService } from "@nestjs-modules/mailer";
 import { InjectModel } from "@nestjs/sequelize";
 import { Mail } from "./mail.model";
@@ -16,6 +16,19 @@ export class MailService {
 
   async create(dto: CreateMailDto){
     return await this.mailProvider.create(dto)
+  }
+
+  async activate(activationLink) {
+    const account = await this.mailProvider.findOne({where: {activationLink}})
+    if(!account){
+      throw new HttpException(`Uncorrect activation link`, HttpStatus.BAD_REQUEST)
+    }
+    account.isActivate = true
+    await account.save()
+  }
+
+  async getAccountStatusByUserId(userId) {
+    return await this.mailProvider.findOne({where: {userId}})
   }
   async createActivationLink(email: string, link: string) {
     await this.mailerService.sendMail({
