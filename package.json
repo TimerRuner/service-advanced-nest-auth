@@ -17,23 +17,30 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "copy": "cp -r src/templates dist/templates",
+    "postbuild": "npm run copy"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/sequelize": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "concurrently": "^8.0.1",
     "cross-env": "^7.0.3",
+    "nodemailer": "^6.9.1",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sequelize": "^6.31.1",
-    "sequelize-typescript": "^2.1.5"
+    "sequelize-typescript": "^2.1.5",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

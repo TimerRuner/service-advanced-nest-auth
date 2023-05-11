@@ -11,12 +11,8 @@ export class UserService {
     return await this.userRepository.create(dto)
   }
 
-  async getUserByEmail(email: Pick<CreateUserDto, "email">){
-    const user = await this.userRepository.findOne({where: {email}})
-    if(!user){
-      throw new NotFoundException(`User with email: ${email} doesn't exist`)
-    }
-    return user
+  async getUserByEmail(email: string){
+    return await this.userRepository.findOne({where: {email}})
   }
 
   async getAllUsers(){

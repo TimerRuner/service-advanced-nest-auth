@@ -1,14 +1,8 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {User} from "../user/user.model";
 
-interface IMailDto {
-    refreshToken: string
-    activationLink: string
-    userId: number
-}
-
 @Table({tableName: "mails"})
-export class Mail extends Model<Mail, IMailDto> {
+export class Mail extends Model<Mail> {
     @Column({primaryKey: true, autoIncrement: true, unique: true})
     id: number
 

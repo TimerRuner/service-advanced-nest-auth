@@ -11,6 +11,7 @@ import { Mail } from "../mail/mail.model";
     SequelizeModule.forFeature([User, Token, Mail])
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService],
+  exports: [UserService]
 })
 export class UserModule {}
