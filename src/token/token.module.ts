@@ -3,11 +3,24 @@ import { TokenService } from './token.service';
 import { SequelizeModule } from "@nestjs/sequelize";
 import { User } from "../user/user.model";
 import { Token } from "./token.model";
+import { JwtModule } from "@nestjs/jwt";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([User, Token])
+    ConfigModule,
+    SequelizeModule.forFeature([User, Token]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        global: true,
+        secret: configService.get("JWT_SECRET")
+      }),
+      inject: [ConfigService]
+    })
   ],
-  providers: [TokenService]
+  providers: [TokenService],
+  controllers: [],
+  exports: [TokenService]
 })
 export class TokenModule {}

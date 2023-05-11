@@ -1,14 +1,9 @@
-import {BelongsTo, Column, DataType, Model, Table} from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import {Token} from "../token/token.model";
 import {Mail} from "../mail/mail.model";
 
-interface IUserDto {
-    email: string
-    password: string
-}
-
 @Table({tableName: "users"})
-export class User extends Model<User, IUserDto>{
+export class User extends Model<User>{
     @Column({primaryKey: true, unique: true, autoIncrement: true})
     id: number
 
@@ -17,6 +12,14 @@ export class User extends Model<User, IUserDto>{
 
     @Column({allowNull: false, type: DataType.STRING})
     password: string
+
+    @ForeignKey(() => Token)
+    @Column
+    tokenId: number;
+
+    @ForeignKey(() => Mail)
+    @Column
+    mailId: number;
 
     @BelongsTo(() => Token)
     token: Token;
