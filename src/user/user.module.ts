@@ -5,9 +5,11 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { User } from "./user.model";
 import { Token } from "../token/token.model";
 import { Mail } from "../mail/mail.model";
+import { TokenModule } from "../token/token.module";
 
 @Module({
   imports: [
+    TokenModule,
     SequelizeModule.forFeature([User, Token, Mail])
   ],
   controllers: [UserController],
