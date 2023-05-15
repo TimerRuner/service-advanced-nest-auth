@@ -1,12 +1,11 @@
-export interface IAuthResponse {
+export interface IUser {
   id: number
   email: string
-  password: string
-  tokenId: number
-  mailId: number
-  createdAt: string
-  updatedAt: string
+  isActivate: boolean
+}
+
+export interface IAuthResponse {
+  user: IUser
   refreshToken: string
   accessToken: string
-  isActivate: boolean
 }
