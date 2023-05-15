@@ -30,10 +30,13 @@ export class AuthService {
     await this.tokenService.saveToken(user.id, refreshToken)
 
     return {
-      ...user.dataValues,
+      user: {
+        id: user.dataValues.id,
+        email: user.dataValues.email,
+        isActivate: accountStatus.isActivate
+      },
       refreshToken,
       accessToken,
-      isActivate: accountStatus.isActivate
     }
   }
 
@@ -51,7 +54,7 @@ export class AuthService {
     return await this.generateTokens(user)
   }
 
-  async registration(dto: CreateUserDto) {
+  async registration(dto: CreateUserDto): Promise<IAuthResponse> {
     const potentialUser = await this.userService.getUserByEmail(dto.email)
     if(potentialUser){
       throw new HttpException(`User with email ${dto.email} - already exist`, HttpStatus.BAD_REQUEST)
@@ -72,10 +75,13 @@ export class AuthService {
     await user.save()
 
     return {
-      ...user.dataValues,
+      user: {
+        id: user.dataValues.id,
+        email: user.dataValues.email,
+        isActivate: mailStatus.isActivate
+      },
       refreshToken,
       accessToken,
-      isActivate: mailStatus.isActivate
     }
   }
 
