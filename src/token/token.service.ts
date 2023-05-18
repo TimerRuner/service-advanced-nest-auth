@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/sequelize";
 import { Token } from "./token.model";
-import { ConfigService } from "@nestjs/config";
-import { where } from "sequelize";
 
 @Injectable()
 export class TokenService {
@@ -13,8 +11,8 @@ export class TokenService {
   ) {}
 
   generateToken(payload){
-    const accessToken = this.jwtService.sign(payload,  {expiresIn: '15s'})
-    const refreshToken = this.jwtService.sign(payload, {expiresIn: '30s'})
+    const accessToken = this.jwtService.sign(payload,  {expiresIn: '15m'})
+    const refreshToken = this.jwtService.sign(payload, {expiresIn: '30m'})
     return {
       accessToken,
       refreshToken
