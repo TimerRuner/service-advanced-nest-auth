@@ -3,8 +3,8 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { InjectModel } from "@nestjs/sequelize";
 import { Mail } from "./mail.model";
 import { CreateMailDto } from "./dto/create-mail.dto";
-import * as process from "process";
 import { ConfigService } from "@nestjs/config";
+import * as uuid from "uuid"
 
 @Injectable()
 export class MailService {
@@ -16,6 +16,13 @@ export class MailService {
 
   async create(dto: CreateMailDto){
     return await this.mailProvider.create(dto)
+  }
+
+  async generateActivationLink(userId: number, email: string) {
+    const activationLink = uuid.v4()
+    const mailStatus = await this.create({activationLink, userId})
+    await this.createActivationLink(email, `${this.configService.get<string>('API_URL')}/api/mail/activate/${activationLink}`)
+    return mailStatus
   }
 
   async activate(activationLink) {
