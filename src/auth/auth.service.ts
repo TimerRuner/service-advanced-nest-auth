@@ -1,8 +1,6 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import * as bcrypt from "bcryptjs"
-import * as uuid from "uuid"
-import * as path from "path"
 
 import { UserService } from "../user/user.service";
 import { CreateUserDto } from "../user/dto/create-user.dto";
@@ -60,11 +58,9 @@ export class AuthService {
       throw new HttpException(`User with email ${dto.email} - already exist`, HttpStatus.BAD_REQUEST)
     }
     const hasPassword = await bcrypt.hash(dto.password, 5)
-    const activationLink = uuid.v4()
-
     const user = await this.userService.create({email: dto.email, password: hasPassword})
-    const mailStatus = await this.mailService.create({activationLink, userId: user.id})
-    await this.mailService.createActivationLink(dto.email, `${this.configService.get<string>('API_URL')}/api/mail/activate/${activationLink}`)
+
+    const mailStatus = await this.mailService.generateActivationLink(user.id, user.email)
 
     const userPreparation = filterPrivateFields({...user, isActivate: mailStatus.isActivate}, ["password"])
     const {refreshToken, accessToken} = this.tokenService.generateToken(userPreparation)
@@ -103,5 +99,32 @@ export class AuthService {
 
     return await this.generateTokens(user)
   }
+
+  async validateUser(email: string) {
+    const user = await this.userService.getUserByEmail(email)
+    if(user) return await this.generateTokens(user)
+
+    const newUser = await this.userService.create({email})
+    const mailStatus = await this.mailService.generateActivationLink(newUser.id, newUser.email)
+
+    const userPreparation = filterPrivateFields({...newUser, isActivate: mailStatus.isActivate}, ["password"])
+    const {refreshToken, accessToken} = this.tokenService.generateToken(userPreparation)
+    const savedTokenRecord = await this.tokenService.saveToken(newUser.id, refreshToken)
+
+    newUser.tokenId = savedTokenRecord.id
+    newUser.mailId = mailStatus.id
+    await newUser.save()
+
+    return {
+      user: {
+        id: newUser.dataValues.id,
+        email: newUser.dataValues.email,
+        isActivate: mailStatus.isActivate
+      },
+      refreshToken,
+      accessToken,
+    }
+  }
+
 
 }

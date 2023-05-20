@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Req, Res, UsePipes } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res, UseGuards, UsePipes } from "@nestjs/common";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { AuthService } from "./auth.service";
 import { Response, Request } from "express";
 import { TokenService } from "../token/token.service";
 import { CustomValidationPipe } from "../pipes/validatoin.pipe";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller('auth')
 export class AuthController {
@@ -40,5 +41,17 @@ export class AuthController {
     const userData = await this.authService.refresh(refreshToken)
     res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 60 * 1000, httpOnly: true })
     return res.json(userData)
+  }
+
+  @Get("google")
+  @UseGuards(AuthGuard("google"))
+  async googleLogin() {}
+
+  @Get("google/callback")
+  @UseGuards(AuthGuard("google"))
+  async googleCallback(@Req() req, @Res() res) {
+    const {user} = req
+    res.cookie('refreshToken', user.refreshToken, {maxAge: 30 * 60 * 1000, httpOnly: true })
+    return res.json(user)
   }
 }
