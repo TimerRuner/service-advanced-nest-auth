@@ -9,6 +9,6 @@ export class MailController {
   @Get("activate/:link")
   async activate(@Param("link") activationLink: string, @Res() res: Response){
     await this.mailService.activate(activationLink)
-    return res.redirect(this.configService.get("API_URL"))
+    return res.redirect(this.configService.get("UI_URL"))
   }
 }

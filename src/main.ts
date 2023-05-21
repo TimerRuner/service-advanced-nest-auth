@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as cors from "cors"
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
 
 async function start() {
   const app = await NestFactory.create(AppModule);

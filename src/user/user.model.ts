@@ -10,7 +10,7 @@ export class User extends Model<User>{
     @Column({unique: true, allowNull: true, type: DataType.STRING})
     email: string
 
-    @Column({allowNull: false, type: DataType.STRING})
+    @Column({allowNull: true, type: DataType.STRING})
     password: string
 
     @ForeignKey(() => Token)

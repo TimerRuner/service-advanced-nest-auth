@@ -6,5 +6,5 @@ export class CreateUserDto {
   readonly email: string
   @IsString({message: "Повинно бути строкою"})
   @Length(4, 16, {message: "Довжина паролю повинна бути від 4 до 16 символів"})
-  readonly password: string
+  readonly password?: string
 }
