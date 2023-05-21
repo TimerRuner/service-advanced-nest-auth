@@ -5,11 +5,13 @@ import { Response, Request } from "express";
 import { TokenService } from "../token/token.service";
 import { CustomValidationPipe } from "../pipes/validatoin.pipe";
 import { AuthGuard } from "@nestjs/passport";
+import { ConfigService } from "@nestjs/config";
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService
   ) {}
   @UsePipes(CustomValidationPipe)
   @Post("login")
@@ -52,6 +54,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     const {user} = req
     res.cookie('refreshToken', user.refreshToken, {maxAge: 30 * 60 * 1000, httpOnly: true })
-    return res.json(user)
+    res.cookie('user', JSON.stringify(user), {maxAge: 30 * 60 * 1000})
+    return res.redirect(this.configService.get("UI_URL"))
   }
 }
